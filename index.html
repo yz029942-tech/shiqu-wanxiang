@@ -602,5 +602,17 @@ const footerSell=document.getElementById("footerSell"); if(footerSell) footerSel
 const footerQuery=document.getElementById("footerQuery"); if(footerQuery) footerQuery.onclick=()=>{ if(requireSetup()) openModal("queryModal"); };
 const footerSupport=document.getElementById("footerSupport"); if(footerSupport) footerSupport.onclick=()=>{ if(requireSetup()){ inquiryType="support"; inquiryProductId=null; $("inquiryTitle").textContent="聯絡客服"; $("inquiryNotice").textContent="請留下聯絡方式與想詢問的內容，我們會由平台協助後續聯繫。"; $("buyerMessage").value=""; openModal("inquiryModal"); }};
 </script>
+
+<!-- game-category-filter-fix -->
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  const select=document.getElementById('categoryFilter');
+  if(!select) return;
+  const value='遊戲點數／虛寶';
+  if(!Array.from(select.options).some(opt=>opt.value===value)){
+    select.add(new Option(value,value));
+  }
+});
+</script>
 </body>
 </html>
