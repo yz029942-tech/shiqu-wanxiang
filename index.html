@@ -91,6 +91,19 @@ html{scroll-behavior:smooth}body{background:var(--v3-paper);font-family:-apple-s
 .footer-v3{background:#1f3d34;color:#e9efe9;padding:38px 0 0;margin-top:16px}.footer-v3-grid{display:grid;grid-template-columns:1.35fr .75fr .75fr 1.1fr;gap:32px}.footer-v3 b,.footer-v3 a,.footer-v3 button,.footer-v3 span{display:block}.footer-v3 b{font-size:12px;color:#fff;margin-bottom:10px}.footer-v3 a,.footer-v3 button,.footer-v3 span{font:inherit;font-size:11px;line-height:2;color:#c8d5d0;text-decoration:none;background:none;border:0;padding:0;text-align:left;cursor:pointer}.footer-logo{font-family:"Noto Serif TC",serif;font-size:22px;letter-spacing:.16em;color:#fff}.footer-intro p{font-size:11px;color:#c8d5d0;line-height:1.8}.footer-bottom-v3{margin-top:24px;padding:14px 32px 22px;border-top:1px solid rgba(255,255,255,.1);font-size:10px;color:#9db1aa}.modal .panel{border-radius:6px}.modal-head h3{font-size:20px}.query-code{font-size:23px}
 @media(max-width:980px){.header-main{grid-template-columns:1fr auto}.hero-shell{grid-template-columns:1fr}.hero-copy2{padding:22px 0 8px}.hero-copy2 h1{font-size:34px}.hero-photo-wrap{height:380px}.category-grid2{grid-template-columns:1fr 1fr}.footer-v3-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:620px){.container{padding-left:16px;padding-right:16px}.top-marquee{height:28px}.header-main{height:60px;padding:0}.brand-mark{width:32px;height:32px}.brand-word b{font-size:16px}.new-brand small{font-size:7px}.header-actions .text-btn{display:none}.header-actions .btn{padding:9px 12px}.new-hero{padding-top:16px}.hero-copy2{padding-top:16px}.hero-copy2 h1{font-size:29px;line-height:1.4;margin:11px 0 13px}.hero-copy2 p{font-size:13px}.hero-actions2{margin-top:16px}.hero-photo-wrap{height:280px}.hero-photo-card{width:225px;left:10px;bottom:10px;padding:12px}.quick-search-box{grid-template-columns:1fr;gap:8px}.search-intro{display:none}.category-grid2{grid-template-columns:1fr 1fr;gap:7px}.category-grid2 .category{min-height:165px}.category-grid2 .category b{font-size:13px}.product-grid{grid-template-columns:1fr 1fr;gap:7px}.product-img{height:170px}.product-body{padding:10px}.product-body h3{font-size:12px}.price{font-size:16px}.section-title-row h2,.section-head h2{font-size:21px}.footer-v3-grid{grid-template-columns:1fr 1fr;gap:22px}.footer-intro{grid-column:1/-1}.trust-section,.safety-section,.rules-section,.faq-section{padding:36px 0}.process-grid,.rules-grid{grid-template-columns:1fr 1fr;gap:7px}.process-card{min-height:160px;padding:14px}.process-card p{font-size:11px}}
+
+/* Header main search */
+.header-main{grid-template-columns:240px minmax(300px,1fr) auto;gap:22px}
+.header-search{height:42px;min-width:0;display:flex;align-items:center;background:#fff;border:1px solid #d8d4cc;border-radius:999px;overflow:hidden;transition:border-color .18s ease,box-shadow .18s ease}
+.header-search:focus-within{border-color:#8aa095;box-shadow:0 0 0 3px rgba(38,79,65,.08)}
+.header-search-icon{padding-left:15px;color:#858a85;font-size:16px;line-height:1}
+.header-search input{flex:1;min-width:0;border:0!important;outline:0;background:transparent;padding:0 11px;font-size:13px;color:var(--ink2);height:100%}
+.header-search input::placeholder{color:#a0a19e}
+.header-search-btn{height:34px;margin-right:4px;border:0;border-radius:999px;background:#294f42;color:#fff;padding:0 14px;font-size:12px;font-weight:750;cursor:pointer}
+.shop-tools{grid-template-columns:1.15fr 1fr 1fr 1.15fr auto}
+.shop-tools .search-box{display:none}
+@media(max-width:980px){.header-main{height:auto;min-height:68px;grid-template-columns:1fr auto;gap:8px 14px;padding-top:8px;padding-bottom:8px}.header-search{grid-column:1/-1;grid-row:2;height:42px}.header-actions{grid-column:2;grid-row:1}.new-brand{grid-column:1;grid-row:1}.shop-tools{grid-template-columns:1fr 1fr 1fr}}
+@media(max-width:620px){.header-main{height:auto;min-height:60px;padding-top:7px;padding-bottom:8px}.header-search{height:40px}.header-search-btn{height:32px;padding:0 12px}.shop-tools{grid-template-columns:1fr 1fr}.shop-tools .btn{grid-column:1/-1}}
 </style>
 </head>
 <body>
@@ -98,7 +111,7 @@ html{scroll-behavior:smooth}body{background:var(--v3-paper);font-family:-apple-s
 <header class="new-header">
   <div class="container header-main">
     <a class="new-brand" href="./index.html"><span class="brand-mark"><span>拾</span></span><span class="brand-word"><b>拾趣萬象</b><small>SHIQU SELECT</small></span></a>
-    <nav class="main-nav"><a href="#products">逛商品</a><a href="#categories">商品分類</a><a href="#howto">交易流程</a><a href="#faq">常見問題</a></nav>
+    <div class="header-search"><span class="header-search-icon">⌕</span><input id="searchInput" placeholder="搜尋商品名稱、描述、分類…" autocomplete="off"><button class="header-search-btn" id="headerSearchBtn">搜尋</button></div>
     <div class="header-actions"><button class="text-btn" id="queryBtn">查詢刊登</button><button class="text-btn" id="supportBtn">聯絡客服</button><button class="btn primary" id="sellBtn">我要刊登</button></div>
   </div>
 </header>
@@ -117,13 +130,6 @@ html{scroll-behavior:smooth}body{background:var(--v3-paper);font-family:-apple-s
       <div class="hero-photo-card"><small>CURATED PICKS</small><b>本週精選二手好物</b><span>相機・3C・穿搭配件，持續更新中。</span></div>
     </div>
   </div>
-</section>
-<section class="quick-search">
- <div class="container quick-search-box">
-   <div class="search-intro"><b>今天想找什麼？</b><span>從關鍵字、分類或價格快速找商品</span></div>
-   <div class="fake-search" onclick="document.getElementById('searchInput').focus();location.hash='products'">⌕ <span>搜尋商品名稱、描述…</span></div>
-   <button class="btn primary" onclick="location.hash='products';document.getElementById('searchInput').focus()">開始搜尋</button>
- </div>
 </section>
 <section id="categories" class="category-section2">
   <div class="container">
@@ -144,9 +150,6 @@ html{scroll-behavior:smooth}body{background:var(--v3-paper);font-family:-apple-s
     </div>
     
       <div class="shop-tools">
-        <div class="search-box">
-          <input id="searchInput" placeholder="搜尋商品名稱、描述…" />
-        </div>
         <select id="categoryFilter">
           <option value="">全部分類</option>
           <option value="衣服鞋子">衣服鞋子</option>
@@ -458,6 +461,8 @@ $("showAllBtn").onclick=()=>{
 };
 
 $("searchInput").addEventListener("input",e=>{searchTerm=e.target.value.trim();loadProducts()});
+$("searchInput").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();document.querySelector("#products").scrollIntoView({behavior:"smooth",block:"start"});}});
+$("headerSearchBtn").onclick=()=>{searchTerm=$("searchInput").value.trim();loadProducts();document.querySelector("#products").scrollIntoView({behavior:"smooth",block:"start"});};
 $("categoryFilter").addEventListener("change",e=>{
   category=e.target.value||null;
   $("productSubtitle").textContent=category?`目前顯示：${category}`:"只有通過平台審核的商品才會顯示。";
