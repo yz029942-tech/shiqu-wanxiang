@@ -43,17 +43,17 @@ jobs:
                   raise SystemExit('Could not find category CSS anchor')
               s = s.replace(css_anchor, css_anchor + '\n.game-cat{background:linear-gradient(135deg,#53635f,#263b36)!important}', 1)
 
+          # 5 categories in one desktop row, tablet/mobile keep existing 2-column rules.
           s = re.sub(r'(\.category-grid2\{[^}]*grid-template-columns:)repeat\(4,1fr\)', r'\1repeat(5,1fr)', s, count=1)
           p.write_text(s)
 
+          # Admin currently does not expose a fixed category select in all views.
+          # If a camping option exists, append the new category there too; otherwise leave admin untouched.
           ap = Path('admin.html')
           a = ap.read_text()
-          if f'<option>{category}</option>' not in a and f'value="{category}"' not in a:
-              a, count = re.subn(r'(<option>露營裝備</option>)', r'\1<option>遊戲點數／虛寶</option>', a)
-              if count == 0:
-                  a, count = re.subn(r'(<option value="露營裝備">露營裝備</option>)', r'\1<option value="遊戲點數／虛寶">遊戲點數／虛寶</option>', a)
-              if count == 0:
-                  raise SystemExit('Could not find admin category option target')
+          if category not in a:
+              a = re.sub(r'(<option>露營裝備</option>)', r'\1<option>遊戲點數／虛寶</option>', a)
+              a = re.sub(r'(<option value="露營裝備">露營裝備</option>)', r'\1<option value="遊戲點數／虛寶">遊戲點數／虛寶</option>', a)
           ap.write_text(a)
           PY
 
