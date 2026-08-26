@@ -111,13 +111,14 @@ html{scroll-behavior:smooth}body{background:var(--v3-paper);font-family:-apple-s
 /* standalone-game-section-style */
 .game-section-simple{padding:0 0 34px}
 .game-section-head{margin-bottom:12px}
-.game-category-card{width:100%;min-height:112px;border:1px solid var(--line2);background:#fff;border-radius:6px;padding:22px 24px;display:flex;align-items:center;justify-content:space-between;text-align:left;cursor:pointer;color:var(--ink2);transition:transform .18s ease,box-shadow .18s ease}
+.game-category-card{width:100%;min-height:0;border:0;background:transparent;border-radius:6px;padding:0;display:block;overflow:hidden;text-align:left;cursor:pointer;color:var(--ink2);transition:transform .18s ease,box-shadow .18s ease}
 .game-category-card:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(30,40,34,.07)}
+.game-market-banner{display:block;width:100%;height:auto;object-fit:contain;border-radius:6px}
 .game-category-copy b,.game-category-copy small{display:block}
 .game-category-copy b{font-size:18px;margin-bottom:7px}
 .game-category-copy small{font-size:11px;color:#777}
 .game-category-arrow{font-size:24px;color:#5f6a63}
-@media(max-width:620px){.game-section-simple{padding-bottom:26px}.game-category-card{min-height:96px;padding:18px}.game-category-copy b{font-size:16px}}
+@media(max-width:620px){.game-section-simple{padding-bottom:26px}}
 </style>
 </head>
 <body>
@@ -164,8 +165,7 @@ html{scroll-behavior:smooth}body{background:var(--v3-paper);font-family:-apple-s
       <div><small>GAME MARKET</small><h2>遊戲專區</h2></div>
     </div>
     <button class="game-category-card" type="button" data-category="遊戲點數／虛寶">
-      <div class="game-category-copy"><b>遊戲點數／虛寶</b><small>點數・裝備・道具・遊戲幣</small></div>
-      <span class="game-category-arrow">→</span>
+      <img class="game-market-banner" src="game-market-banner.png" alt="遊戲專區">
     </button>
   </div>
 </section>
