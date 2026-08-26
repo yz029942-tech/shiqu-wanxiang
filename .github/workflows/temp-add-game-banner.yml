@@ -1,60 +1,35 @@
-name: Add game banner to game section
-
+name: Add game banner
 on:
   push:
-    branches: [main]
+    branches:
+      - main
     paths:
-      - '.github/workflows/temp-add-game-banner.yml'
-
+      - .github/workflows/temp-add-game-banner.yml
 permissions:
   contents: write
-
 jobs:
-  update:
+  patch:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Update only standalone game section banner
+      - name: Patch game section only
         run: |
-          python - <<'PY'
+          python3 - <<'PY'
           from pathlib import Path
-          import re
-
-          p = Path('index.html')
-          s = p.read_text()
-
-          # Only replace the inside of the existing standalone game card.
-          card_pat = re.compile(
-              r'(<button class="game-category-card" type="button" data-category="遊戲點數／虛寶">)'
-              r'.*?'
-              r'(</button>)',
-              re.S,
-          )
-          replacement = r'''\1
-      <img class="game-market-banner" src="game-market-banner.png" alt="遊戲專區｜遊戲點數／虛寶">
-    \2'''
-          s, count = card_pat.subn(replacement, s, count=1)
-          if count != 1:
-              raise SystemExit('Standalone game category card not found exactly once; aborting to avoid unrelated changes')
-
-          css_marker = '/* game-market-banner-only */'
-          if css_marker not in s:
-              css = '''
-<style>
-/* game-market-banner-only */
-.game-category-card{padding:0;overflow:hidden;background:transparent;border:0;min-height:0}
-.game-category-card:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(30,40,34,.07)}
-.game-market-banner{display:block;width:100%;height:auto;object-fit:contain;border-radius:6px}
-</style>
-'''
-              s = s.replace('</head>', css + '</head>', 1)
-
+          p=Path('index.html')
+          s=p.read_text()
+          old='''    <button class="game-category-card" type="button" data-category="遊戲點數／虛寶">\n      <div class="game-category-copy"><b>遊戲點數／虛寶</b><small>點數・裝備・道具・遊戲幣</small></div>\n      <span class="game-category-arrow">→</span>\n    </button>'''
+          new='''    <button class="game-category-card" type="button" data-category="遊戲點數／虛寶">\n      <img class="game-market-banner" src="game-market-banner.png" alt="遊戲專區">\n    </button>'''
+          if old not in s:
+              raise SystemExit('target game card not found')
+          s=s.replace(old,new,1)
+          css='''.game-category-card{padding:0;overflow:hidden;background:transparent;border:0;min-height:0}\n.game-market-banner{display:block;width:100%;height:auto;object-fit:contain;border-radius:6px}\n'''
+          s=s.replace('/* standalone-game-section-style */','/* standalone-game-section-style */\n'+css,1)
           p.write_text(s)
           PY
-
           rm .github/workflows/temp-add-game-banner.yml
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html .github/workflows/temp-add-game-banner.yml
-          git commit -m "Use uploaded banner in standalone game section"
+          git commit -m "Use uploaded image for game section"
           git push
