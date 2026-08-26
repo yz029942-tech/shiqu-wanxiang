@@ -1,0 +1,53 @@
+name: Move frontend search to header
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/temp-move-search-to-header.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update search layout and cleanup
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+
+          old_nav='''    <nav class="main-nav"><a href="#products">逛商品</a><a href="#categories">商品分類</a><a href="#howto">交易流程</a><a href="#faq">常見問題</a></nav>'''
+          new_search='''    <div class="header-search"><span class="header-search-icon">⌕</span><input id="searchInput" placeholder="搜尋商品名稱、描述、分類…" autocomplete="off"><button class="header-search-btn" id="headerSearchBtn">搜尋</button></div>'''
+          if old_nav not in s: raise SystemExit('header nav target not found')
+          s=s.replace(old_nav,new_search,1)
+
+          quick='''<section class="quick-search">\n <div class="container quick-search-box">\n   <div class="search-intro"><b>今天想找什麼？</b><span>從關鍵字、分類或價格快速找商品</span></div>\n   <div class="fake-search" onclick="document.getElementById('searchInput').focus();location.hash='products'">⌕ <span>搜尋商品名稱、描述…</span></div>\n   <button class="btn primary" onclick="location.hash='products';document.getElementById('searchInput').focus()">開始搜尋</button>\n </div>\n</section>\n'''
+          if quick not in s: raise SystemExit('quick search target not found')
+          s=s.replace(quick,'',1)
+
+          old_box='''        <div class="search-box">\n          <input id="searchInput" placeholder="搜尋商品名稱、描述…" />\n        </div>\n'''
+          if old_box not in s: raise SystemExit('product search target not found')
+          s=s.replace(old_box,'',1)
+
+          old_listener='''$("searchInput").addEventListener("input",e=>{searchTerm=e.target.value.trim();loadProducts()});'''
+          new_listener='''$("searchInput").addEventListener("input",e=>{searchTerm=e.target.value.trim();loadProducts()});\n$("searchInput").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();document.querySelector("#products").scrollIntoView({behavior:"smooth",block:"start"});}});\n$("headerSearchBtn").onclick=()=>{searchTerm=$("searchInput").value.trim();loadProducts();document.querySelector("#products").scrollIntoView({behavior:"smooth",block:"start"});};'''
+          if old_listener not in s: raise SystemExit('search listener target not found')
+          s=s.replace(old_listener,new_listener,1)
+
+          css='''\n/* Header main search */\n.header-main{grid-template-columns:240px minmax(300px,1fr) auto;gap:22px}\n.header-search{height:42px;min-width:0;display:flex;align-items:center;background:#fff;border:1px solid #d8d4cc;border-radius:999px;overflow:hidden;transition:border-color .18s ease,box-shadow .18s ease}\n.header-search:focus-within{border-color:#8aa095;box-shadow:0 0 0 3px rgba(38,79,65,.08)}\n.header-search-icon{padding-left:15px;color:#858a85;font-size:16px;line-height:1}\n.header-search input{flex:1;min-width:0;border:0!important;outline:0;background:transparent;padding:0 11px;font-size:13px;color:var(--ink2);height:100%}\n.header-search input::placeholder{color:#a0a19e}\n.header-search-btn{height:34px;margin-right:4px;border:0;border-radius:999px;background:#294f42;color:#fff;padding:0 14px;font-size:12px;font-weight:750;cursor:pointer}\n.shop-tools{grid-template-columns:1.15fr 1fr 1fr 1.15fr auto}\n.shop-tools .search-box{display:none}\n@media(max-width:980px){.header-main{height:auto;min-height:68px;grid-template-columns:1fr auto;gap:8px 14px;padding-top:8px;padding-bottom:8px}.header-search{grid-column:1/-1;grid-row:2;height:42px}.header-actions{grid-column:2;grid-row:1}.new-brand{grid-column:1;grid-row:1}.shop-tools{grid-template-columns:1fr 1fr 1fr}}\n@media(max-width:620px){.header-main{height:auto;min-height:60px;padding-top:7px;padding-bottom:8px}.header-search{height:40px}.header-search-btn{height:32px;padding:0 12px}.shop-tools{grid-template-columns:1fr 1fr}.shop-tools .btn{grid-column:1/-1}}\n'''
+          marker='</style>\n</head>'
+          if marker not in s: raise SystemExit('style end target not found')
+          s=s.replace(marker,css+marker,1)
+          p.write_text(s)
+          PY
+          rm .github/workflows/temp-move-search-to-header.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html .github/workflows/temp-move-search-to-header.yml
+          git commit -m "Move main product search into header"
+          git push
