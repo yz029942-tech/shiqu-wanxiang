@@ -1,0 +1,73 @@
+name: Add game category
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/temp-add-game-category.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add category across frontend and admin
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          category = '遊戲點數／虛寶'
+
+          # Frontend
+          p = Path('index.html')
+          s = p.read_text()
+
+          # Add to every select that currently ends with the camping category.
+          if f'<option>{category}</option>' not in s:
+              s, count = re.subn(r'(<option>露營裝備</option>)', r'\1<option>遊戲點數／虛寶</option>', s)
+              if count == 0:
+                  raise SystemExit('Could not find frontend category option target')
+
+          # Add one visual category card after the camping category card.
+          if f'data-category="{category}"' not in s:
+              pat = r'(<button class="category[^>]*data-category="露營裝備"[^>]*>.*?</button>)'
+              game_card = '''\n      <button class="category tone-cat game-cat" data-category="遊戲點數／虛寶"><span class="line-art">◇</span><b>遊戲點數／虛寶</b><small>點數・裝備・道具・遊戲幣</small></button>'''
+              s, count = re.subn(pat, lambda m: m.group(1) + game_card, s, count=1, flags=re.S)
+              if count == 0:
+                  raise SystemExit('Could not find camping category card target')
+
+          # Give the new category its own understated game-inspired tone.
+          if '.game-cat{' not in s:
+              css_anchor = '.camp-cat{background:linear-gradient(135deg,#9a8161,#5b4a38)!important}'
+              if css_anchor not in s:
+                  raise SystemExit('Could not find category CSS anchor')
+              s = s.replace(css_anchor, css_anchor + '\n.game-cat{background:linear-gradient(135deg,#53635f,#263b36)!important}', 1)
+
+          # Five categories fit neatly in one desktop row; tablet/mobile rules remain unchanged.
+          s = re.sub(r'(\.category-grid2\{[^}]*grid-template-columns:)repeat\(4,1fr\)', r'\1repeat(5,1fr)', s, count=1)
+
+          p.write_text(s)
+
+          # Admin: add the same category anywhere category selects use the camping option.
+          ap = Path('admin.html')
+          a = ap.read_text()
+          if f'<option>{category}</option>' not in a:
+              a, count = re.subn(r'(<option>露營裝備</option>)', r'\1<option>遊戲點數／虛寶</option>', a)
+              if count == 0:
+                  # Some admin category editors may use option values.
+                  a, count = re.subn(r'(<option value="露營裝備">露營裝備</option>)', r'\1<option value="遊戲點數／虛寶">遊戲點數／虛寶</option>', a)
+              if count == 0:
+                  raise SystemExit('Could not find admin category option target')
+          ap.write_text(a)
+          PY
+
+          rm .github/workflows/temp-add-game-category.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html admin.html .github/workflows/temp-add-game-category.yml
+          git commit -m "Add game points and virtual items category"
+          git push
