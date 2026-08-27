@@ -135,6 +135,17 @@ html{scroll-behavior:smooth}body{background:var(--v3-paper);font-family:-apple-s
 @media(max-width:1000px){.more-category-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.more-category-section{padding:4px 0 32px}.more-category-grid{grid-template-columns:1fr 1fr;gap:8px}.more-category-btn{padding:12px}.more-category-btn b{font-size:13px}.more-category-btn span{font-size:10px}}
 </style>
+
+<style id="hero-market-snapshot-style">
+.hero-market-snapshot{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:18px;padding:13px 0;border-top:1px solid var(--v3-line,#e7e2d9);border-bottom:1px solid var(--v3-line,#e7e2d9)}
+.hero-market-snapshot>span{min-width:0;padding:0 13px}
+.hero-market-snapshot>span:first-child{padding-left:0}
+.hero-market-snapshot>span+span{border-left:1px solid var(--v3-line,#e7e2d9)}
+.hero-market-snapshot b,.hero-market-snapshot small{display:block}
+.hero-market-snapshot b{font-size:12px;line-height:1.35;color:var(--v3-black,#20231f);margin-bottom:4px}
+.hero-market-snapshot small{font-size:10px;line-height:1.45;color:var(--v3-sub,#71756f);white-space:nowrap}
+@media(max-width:620px){.hero-market-snapshot{margin-top:16px;padding:11px 0}.hero-market-snapshot>span{padding:0 8px}.hero-market-snapshot b{font-size:11px}.hero-market-snapshot small{font-size:9px;white-space:normal}.trust-inline{margin-top:14px}}
+</style>
 </head>
 <body>
 <div class="top-marquee"><div class="marquee-inner"><span>全站商品人工審核</span><i>·</i><span>免註冊即可刊登</span><i>·</i><span>買家透過平台安心詢問</span><i>·</i><span>二手好物，找到剛剛好的下一站</span><i>·</i><span>全站商品人工審核</span><i>·</i><span>免註冊即可刊登</span></div></div>
@@ -153,6 +164,12 @@ html{scroll-behavior:smooth}body{background:var(--v3-paper);font-family:-apple-s
       <h1>值得留下的好物，<br>找到下一個需要它的人。</h1>
       <p>免註冊即可刊登，商品經平台人工審核後才公開。從相機、3C 到穿搭配件，用更聰明的方式找到剛剛好的二手好物。</p>
       <div class="hero-actions2"><button class="btn primary hero-btn" id="heroSellBtn">開始刊登</button><button class="btn ghost hero-btn" id="heroQueryBtn">查詢我的商品</button></div>
+      <!-- hero-market-snapshot-v1 -->
+      <div class="hero-market-snapshot" aria-label="平台資訊">
+        <span><b>本週持續更新</b><small>精選好物陸續上架</small></span>
+        <span><b>熱門分類</b><small>3C・露營・釣具</small></span>
+        <span><b>人工審核</b><small>上架前逐件確認</small></span>
+      </div>
       <div class="trust-inline"><span>✓ 人工審核</span><span>✓ 免註冊刊登</span><span>✓ 聯絡資訊保護</span></div>
     </div>
     <div class="hero-photo-wrap">
