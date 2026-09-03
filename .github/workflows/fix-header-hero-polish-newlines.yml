@@ -1,0 +1,50 @@
+name: Fix Header Hero Polish Formatting
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-header-hero-polish-newlines.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Replace escaped newline text in scoped polish block
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          start=s.find('<style id="header-hero-polish-v1">')
+          end=s.find('</style>', start)
+          if start < 0 or end < 0:
+              raise SystemExit('Header/Hero polish block not found')
+          end += len('</style>')
+          block=s[start:end]
+          fixed=block.replace('\\n','\n')
+          if block == fixed:
+              print('Formatting already correct.')
+              raise SystemExit(0)
+          s=s[:start]+fixed+s[end:]
+          # Remove a literal escaped newline immediately surrounding the style block if present.
+          s=s.replace('\\n<style id="header-hero-polish-v1">','<style id="header-hero-polish-v1">',1)
+          s=s.replace('</style>\\n</head>','</style>\n</head>',1)
+          p.write_text(s,encoding='utf-8')
+          print('Header/Hero CSS formatting fixed.')
+          PY
+      - name: Commit formatting fix
+        shell: bash
+        run: |
+          if git diff --quiet -- index.html; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'Fix header hero polish CSS formatting [skip ci]'
+          git push origin HEAD:main
