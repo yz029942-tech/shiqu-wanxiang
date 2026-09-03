@@ -5,7 +5,7 @@ main>section{padding-top:58px;padding-bottom:58px}
 .section-head{margin-bottom:24px}
 .section-head h2{font-family:"Noto Serif TC",serif;letter-spacing:-.018em;line-height:1.25}
 .section-head p{line-height:1.8}
-.footer-v3{margin-top:26px;padding:48px 0 20px;background:linear-gradient(180deg,#24483c,#1c3930);color:rgba(255,255,255,.84);border-top:0}
+.footer-v3{margin-top:26px;padding:48px 0 20px;background:linear-gradient(180deg,#6b3540,#65313a);color:rgba(255,255,255,.84);border-top:0}
 .footer-v3-grid{display:grid;grid-template-columns:1.45fr repeat(3,1fr);gap:32px;align-items:start}
 .footer-v3-grid>div{min-width:0}
 .footer-logo{font-family:"Noto Serif TC",serif;font-size:25px;font-weight:800;letter-spacing:.09em;color:#fff;margin-bottom:12px}

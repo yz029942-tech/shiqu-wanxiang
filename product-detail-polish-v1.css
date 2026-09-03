@@ -3,31 +3,31 @@
 @import url('./info-sections-polish-v1.css');
 @import url('./footer-spacing-polish-v1.css');
 /* Product detail polish v1 — visual only */
-#productModal .panel.wide{width:min(980px,100%);padding:26px;border:1px solid #e8e1d7;background:#fffdfa;box-shadow:0 28px 80px rgba(29,45,38,.16)}
+#productModal .panel.wide{width:min(980px,100%);padding:26px;border:1px solid #e8e1d7;background:#fffdfa;box-shadow:0 28px 80px rgba(44,30,33,.16)}
 #productModal .modal-head{padding-bottom:15px;margin-bottom:22px;border-bottom:1px solid #eee8de}
 #productModal .modal-head h3{font-family:"Noto Serif TC",serif;font-size:19px;letter-spacing:.04em}
-#productModal .x{background:#f2eee7;color:#536059;transition:transform .18s ease,background .18s ease}
+#productModal .x{background:#f2eee7;color:#615254;transition:transform .18s ease,background .18s ease}
 #productModal .x:hover{background:#e9e3d9;transform:rotate(4deg)}
 #productModal .detail-grid{grid-template-columns:minmax(0,1.08fr) minmax(320px,.92fr);gap:34px;align-items:start}
 #productModal .gallery{min-height:520px;height:520px;border-radius:18px;background:linear-gradient(145deg,#f4f0e8,#ebe6dd);border:1px solid #ece5da;box-shadow:inset 0 1px 0 rgba(255,255,255,.7)}
 #productModal .gallery-main{height:520px;padding:14px;object-fit:contain;transition:transform .28s ease}
 #productModal .gallery:hover .gallery-main{transform:scale(1.012)}
-#productModal .gallery-nav{width:44px;height:44px;background:rgba(255,255,255,.9);border:1px solid rgba(218,211,200,.8);box-shadow:0 8px 24px rgba(34,48,41,.12);font-size:24px;transition:transform .18s ease,background .18s ease}
+#productModal .gallery-nav{width:44px;height:44px;background:rgba(255,255,255,.9);border:1px solid rgba(218,211,200,.8);box-shadow:0 8px 24px rgba(47,35,37,.12);font-size:24px;transition:transform .18s ease,background .18s ease}
 #productModal .gallery-nav:hover{background:#fff;transform:translateY(-50%) scale(1.05)}
-#productModal .gallery-counter{bottom:14px;padding:6px 10px;background:rgba(33,54,46,.78);backdrop-filter:blur(8px);font-size:10px;letter-spacing:.06em}
+#productModal .gallery-counter{bottom:14px;padding:6px 10px;background:rgba(52,35,38,.78);backdrop-filter:blur(8px);font-size:10px;letter-spacing:.06em}
 #productModal .detail-info{padding:8px 2px}
-#productModal .detail-info .badge{background:#edf2ee;color:#315649;border:1px solid #dce7e0;font-size:10px;letter-spacing:.04em;padding:5px 9px}
-#productModal .detail-info h2{font-family:"Noto Serif TC",serif;font-size:30px;line-height:1.4;font-weight:700;margin:13px 0 9px;letter-spacing:-.015em;color:#202720}
-#productModal .detail-info>.price{font-size:28px;line-height:1.1;color:#214d3e;margin:4px 0 18px;letter-spacing:-.02em}
-#productModal .detail-info>.muted{line-height:1.7;color:#858981}
+#productModal .detail-info .badge{background:#f2edee;color:#53343a;border:1px solid #e6ddde;font-size:10px;letter-spacing:.04em;padding:5px 9px}
+#productModal .detail-info h2{font-family:"Noto Serif TC",serif;font-size:30px;line-height:1.4;font-weight:700;margin:13px 0 9px;letter-spacing:-.015em;color:#2f2a28}
+#productModal .detail-info>.price{font-size:28px;line-height:1.1;color:#48262c;margin:4px 0 18px;letter-spacing:-.02em}
+#productModal .detail-info>.muted{line-height:1.7;color:#8d7d80}
 #productModal .detail-spec-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:20px 0}
 #productModal .detail-spec{background:#f8f6f1;border:1px solid #e8e2d8;border-radius:11px;padding:13px 12px;min-height:68px}
 #productModal .detail-spec small{text-transform:none;color:#969990;font-size:10px;letter-spacing:.04em;margin-bottom:7px}
-#productModal .detail-spec b{font-size:14px;color:#2f3731;font-weight:720}
-#productModal .detail-description{margin-top:17px;background:#faf8f4;border:1px solid #ece6dc;border-radius:13px;padding:17px 18px;line-height:1.95;color:#555c56;font-size:13.5px;min-height:96px}
+#productModal .detail-spec b{font-size:14px;color:#382e30;font-weight:720}
+#productModal .detail-description{margin-top:17px;background:#faf8f4;border:1px solid #ece6dc;border-radius:13px;padding:17px 18px;line-height:1.95;color:#5e5355;font-size:13.5px;min-height:96px}
 #productModal .detail-actions{margin-top:22px;padding-top:18px;border-top:1px solid #eee8de;gap:9px}
 #productModal .detail-actions .btn{min-height:44px;padding:11px 19px;border-radius:999px}
-#productModal .detail-actions .primary{background:#244b3e;box-shadow:0 8px 22px rgba(36,75,62,.16)}
+#productModal .detail-actions .primary{background:#7a3e48;box-shadow:0 8px 22px rgba(71,40,45,.16)}
 #productModal .detail-actions .ghost{background:#fff;border-color:#ddd7cd}
 @media(max-width:820px){
  #productModal .panel.wide{padding:20px;width:min(720px,100%)}
