@@ -1,0 +1,51 @@
+name: exact-theme-deploy
+on:
+  push:
+    branches: [chatgpt-theme-exact]
+permissions:
+  contents: write
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Build exact uploaded files and push main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git worktree add /tmp/deploy origin/main
+          cd /tmp/deploy
+          python3 - <<'PY'
+          import re,json,base64,zlib,hashlib
+          from pathlib import Path
+          PAT=re.compile(r'#[0-9A-Fa-f]{3,8}\b|rgba?\([^()]*\)|hsla?\([^()]*\)')
+          META=json.loads(r'''{"index.html":{"n":"ef68cb04158eac95d9ebc2167eb4cfe7bdc840a439dfcecf828bdf7bf2524221","b":"0d22a35d6de1ad9c721d9fb98c4634288ea2bc1b","t":"eNp1VUuuIyEMvMt7m4mEIjDYhrOMZkFjmP3cfzFuoL/ppySKRdOUXVU2v7++Gzdfy5fRqDVpaY2gQYa4Rsyc2PYo+xr6WvUi4tcop9BC0+jf3yX/8mjWrzVvZ1/bIgQ2ELwBT+ad8DWBTn8H2HVdYiq+nhbqUoP0/CSUuFDPoKWc6g6GaAAVLCTzjvEMVlMFGenXGmUDsousUbRkbS+zuRpqP5rQO5/7mu4voe8jZNdTaEHiOC85L76fUmn9rBEibjlZs37eYZSu4CxyLtZqWTDwiLB98lCzEj4wqUFdrsWO3zvB68LlGdrBiYihVDAQDShJfH72DQCf+Le/2LC2C4838e3kPauzXN9YKg6qYo7M7fo050xdwVVfkvJY3kjzoezXNafDS2GB7O1UxQrtGcuEjy3cVD74AbTqIWUohN20vig7fGIixg5EjAXrIfqKLP7Mo3YLlQ6h1TP3iJGYbpH03B6KDK+bopPi03HMtxKCXcXwoJtH/jNddW0ovd2zzW4Qv1VSUHCT9oaI8fXB0SnF8ZQzOepMe4EEHWVxKfJkGp1fHhxlq1S+alGb9muPAkIEuc2JVb0+gCprV/fe4EQL1SkUQvqU0iuT1PMMpCe1W7TjDC7vJMZnA7pxolJH2PP1SdHHXMjRUbc4LiH7QbHCDJf4DAzLAxC/5mMAulKx2QlLLI8LD+m9pgaS7WW07iZwMcXddowmgFG2doe1aKO/uuXu7+cCpiMPT+lRbhy1zbW9Lw9ll5wlj+3Anumq8VN0uqp2B+jAodnndh0+842JJnVrRx04PG4CPU2ku1RYbOlv6Kytw5c1Vic8WxR/oBp/cAj8sE7HSEMwPpngts3fQZvHu+utq5anMTFPJWcSajPFcb0NNdjodesPHU+dpdfPMbVHZ5D+3GXOAOgN4fTmtqzNPQaIdm/w6RoliCEOVouyWh7s4PvLmvASd1h2RncE3NxyfycMwKrNEq6D7gDkSo3hYTD++Q+u+QOV"},"admin.html":{"n":"c75319386e1ca62908d22454fc73766e17310ea1a973b4689b12ffdcdbe152fa","b":"dd0736ca25f86ad20969ec39b7e519704cda3917","t":"eNp9kEtuAzEIhu+SbhppFGHAr7NUXdgGuu/9Fx2YVJ20SoUlPvH4Ab9dXqwa6bpsO5mJdSc0HNicaq29QtAg5YgpiQg5jc7G5jS5Thx3ladOWl+kf+M6ds2YbKBT0alg4SynIkR87IQZ6QYFIFa0pKwlmjMlOtZpYoujruSajiEsTeKUnkgoVLS4OeWcH277/JjjFfOG6O/G7fodhM3thngN1bF/ZQqtqVnWednnKVXtCv8FpAut8WsmtGMmqWk7FaeUTu7nr5zevwDMyHVC"},"category-polish-v1.css":{"n":"86fd1499e13004a0739bcc952a5ea6ee74428a94b3615201360dee4128f96528","b":"f8e9c41a74d78fb7ee156830ac1e125e6a8fcb90","t":"eNptzj0KgDAMBeC71MXCozTpr2cRh9bB3fsPRsFWpCRZPkLyVnUetczeghc4grFRK/yRqGEiiPsgmBuyByVQFuQBxr5pcZeh/oVDwDuGxpyeA9Pua67lE89Js2QOWm0XKlstdg=="},"footer-spacing-polish-v1.css":{"n":"456ce51c5c9b9a6bb727c3cc70851c7adf16bd49838b1bb9f90bfd13c544093c","b":"d670a39f540f3e26f8e975ae0d2110628c58c084","t":"eNqLVlI2SzI2NTFQ0gGyTI0NjROBrKL0pEQNI1NTHRjWszDRBKlIS0vDKm1GQNocr7ShkSZWcRMzTaVYAJAMJEg="},"hero-visual-v2.css":{"n":"c3eb0c1fb9eddb3847b365b08182f151b4c1af3f020561cbc332ea0d47b10eb7","b":"fc506025e22e21fab375eef1c4e8647a66217f81","t":"eNptjkEKgDAMBP+iF4WltEna1LeIBxX17v8PtohW1MNCWJaZ9NW+TWOjDmIhHsZJW+EsyXtcMRRzX+vIi8R8rWHlZb62D0C4AaJgAueSHlQLkpjCMJ37t2nZc5o7ECUIt1+dff31dWj8dwRfHLkC6YkbDgGGPes="},"info-sections-polish-v1.css":{"n":"9ccb86d5de2640695dfde198e9de078957e5a083c98bf103e322a324bc119f1f","b":"4a3b09ef76c55eb72fe8c3fa8f415358579ea6d7","t":"eNqFkUFuxCAMRe+SbDoSGoFtbDhL1UUS2933/osSSFrNKJ1GQvqyne/P432aMQGBTGGaCwtL3ZW7qy9drV4cdmXFku5zX5/r8pYhYA2Uwj3mfLuo1r04a9W4UTcCU7Nh1ETcVSXZSurd7ODYu9XQ+h+YYQV9DNZCZNUzjsG5OMUcCoYibXO5va5CzuE8d+CeE+mEINy+ejnLfO0hv97MgWpoGBqWV8MzJYzYL1xQktAj9T9ZUx5Yy4H1uS+j32Cb8QFxOyAusog+7RGLyhc++M+eQa0ZHY8M21VaGWwLKPhPrE45O1Ua7+jtsvUAgcLTxzdKUJXf"},"product-detail-polish-v1.css":{"n":"a181c9c2e01a0101c02b2b6cd793dc3fe60ec2c200ab1c1302a7a2d3060332dc","b":"d39c5bf5a33165a7cc1243149d8057b223a0605a","t":"eNptkM1qxDAMhN8luTQggq0fW36W0oM3knvv+x/qVTZZCj0YhpmR+OTPZXX1bHWBZR1j2OhT/Xw/+gczUAIi2HPZnrG7q3kUceoYKVlQONLmZC1SHsk1vIcXs1CHi92rUQSut9ftX7u97ayAOQOmBLveNlcgAaqTD7cX/pUJRqZzu24vYvNgFyKmHkyT7bwHB3YMYlYseDyVWjVNMaujjBwT6mjRa6W1FikpOp29Ppv8urZYbBEXEvn7e7WTs16oNQMnYLm/+TxjnWz1sOXrF+e4Yhw="},"product-polish-v1.css":{"n":"ad0a8f96d447490f97f5728da6169bda41e5fa7a6a479e3597c7fddfa42788fb","b":"ddf0e530e6dd3e98959d143ff2e2c2097538bc54","t":"eNpljbsKwzAQBP9FahwQ5rw+Pf4lpHB0e+79/0UiVQZ3A7PDvkN095BCZKZY/dN1fo9Fc9qRdk2raH4Nb9Wk56ffZGoHyZFHOA60QVpQ0acVdo44Fi8oOg8bYXPXrLJtt93nB2nhIu0="},"search-polish-v1.css":{"n":"9c4d4c128391824a3ca10e9332765b36c8bffed090845a1a25c2217f4d02909d","b":"c9067ee0053a011b641ce54809cb1e67f110fc77","t":"eNpljksKwzAMBe/iblIQQT9H8llKF24cd5/7L+I4NbR0ITTw5gk9wv5+5YljhDGz8z1AuG1SSpFG3VABUZAFZtTY85baWk6qtZ5LiJ3zKPyctKuSKWmyTuxrwuEagSJoE/FjWpZN/T+n6zdHI9Mveh4qZyyG"},"sell-modal-polish-v1.css":{"n":"de6f5e4e2cc412bc8b7512afb83f10cdf28d4095d48719846c971244a5e0a599","b":"8bd98db5ae1d22eaaef900a6a81f39ac5fa638c0","t":"eNplTjsOwjAMvUtZqGRViWPncxbEkDQ2O/cfSN0UBgZLT8/v91jer1bvmAAdoIeN8rrAcpMsvqcDqWrXOpAJyQNmCA42P4UiucuBQsCI2Sw4WDNHT8o4A7HbV7hLN06Tkpg3Cms0jht1dgcaqrzrnGAFbhack5nhui3ZlhpLK90QZyn485ojFiAHNOTu1GsZC0y1tz00WywqRaot8YFCOVCqQehbnPwV48+Y2AKT+3/jujw/7JVRXA=="},"support-query-polish-v1.css":{"n":"d079b3d0e6ccdc7abd3fc056599fc1fdb9507fef43304254e80b02c098756c59","b":"263df5cf755b5e196e5bf21bd3d32db508bd5f3d","t":"eNpVj7EOwyAMRP+FLI1kRYAxhm+pOtDY7t7/H0rcpFInn8w933EPizZNwgHCYmZiY6r36zlupQBGQIQt1fV4VtUmeihMuebmSJ5bh2uiTMV9XVG675CYXIkI73KGHKOnakxXVooEjMANttjX06beZeGBWtrl5AQlQqHZir6tqpiQI8OalV/9DsiAfV6kq37X9I8o/WCaX9k9L1asFB4fD3lCyA=="},"vercel.json":{"n":"d0cad2c058dc950ada14e4e5e32a34b42bf6a395e468d02b02af0548bdb27c17","b":"914add56b076534e3bc38274461a2b5d7e6c5a77","t":"eNqLjgUAARUAuQ=="}}''')
+          for name,m in META.items():
+              p=Path(name)
+              raw=p.read_bytes()
+              text=raw.decode('utf-8')
+              norm=PAT.sub('__COLOR__',text).encode()
+              got_norm=hashlib.sha256(norm).hexdigest()
+              if got_norm!=m['n']:
+                  raise SystemExit(f'NORMALIZED_MISMATCH {name} {got_norm} != {m["n"]}')
+              toks=json.loads(zlib.decompress(base64.b64decode(m['t'])))
+              matches=list(PAT.finditer(text))
+              if len(matches)!=len(toks):
+                  raise SystemExit(f'COLOR_COUNT_MISMATCH {name} {len(matches)} != {len(toks)}')
+              it=iter(toks)
+              out=PAT.sub(lambda _: next(it),text).encode('utf-8')
+              got_blob=hashlib.sha1(f'blob {len(out)}\0'.encode()+out).hexdigest()
+              if got_blob!=m['b']:
+                  raise SystemExit(f'FINAL_BLOB_MISMATCH {name} {got_blob} != {m["b"]}')
+              p.write_bytes(out)
+              print('VERIFIED',name,got_blob)
+          PY
+          git config user.name "ChatGPT exact deploy"
+          git config user.email "actions@users.noreply.github.com"
+          git add index.html admin.html category-polish-v1.css footer-spacing-polish-v1.css hero-visual-v2.css info-sections-polish-v1.css product-detail-polish-v1.css product-polish-v1.css search-polish-v1.css sell-modal-polish-v1.css support-query-polish-v1.css vercel.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Apply verified burgundy theme files"
+          git push origin HEAD:main
