@@ -1,0 +1,62 @@
+name: premium-exact-deploy
+on:
+  push:
+    branches: [chatgpt-premium-exact]
+permissions:
+  contents: write
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply exact uploaded files and push main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git worktree add /tmp/deploy origin/main
+          cd /tmp/deploy
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64,zlib,hashlib
+          p=Path('index.html')
+          s=p.read_text()
+          reps=[
+          ('<link rel="stylesheet" href="./product-detail-polish-v1.css">\n</head>','<link rel="stylesheet" href="./product-detail-polish-v1.css">\n<link rel="stylesheet" href="./premium-gold-polish-v1.css">\n</head>'),
+          ('    <div class="more-category-grid">\n','    <div class="more-cat-scroll-wrap">\n    <button type="button" class="more-cat-arrow more-cat-arrow-left" aria-label="向左捲動" onclick="document.getElementById(\'moreCategoryGrid\').scrollBy({left:-320,behavior:\'smooth\'})">‹</button>\n    <div class="more-category-grid" id="moreCategoryGrid">\n'),
+          ('      <button class="more-category-btn" type="button" data-category="居家照護／保健器材"><b>居家照護／保健器材</b><span>照護・輔具・保健・居家設備</span></button>\n    </div>\n  </div>\n</section>','      <button class="more-category-btn" type="button" data-category="居家照護／保健器材"><b>居家照護／保健器材</b><span>照護・輔具・保健・居家設備</span></button>\n    </div>\n    <button type="button" class="more-cat-arrow more-cat-arrow-right" aria-label="向右捲動" onclick="document.getElementById(\'moreCategoryGrid\').scrollBy({left:320,behavior:\'smooth\'})">›</button>\n    </div>\n  </div>\n</section>')
+          ]
+          for a,b in reps:
+              if s.count(a)!=1: raise SystemExit('INDEX_ANCHOR_MISMATCH')
+              s=s.replace(a,b)
+          p.write_text(s)
+          css=zlib.decompress(base64.b64decode('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'))
+          Path('premium-gold-polish-v1.css').write_bytes(css)
+          targets={
+          'index.html':'0abd63472d689274567ab8a226488aee9df72aaa',
+          'admin.html':'dd0736ca25f86ad20969ec39b7e519704cda3917',
+          'category-polish-v1.css':'f8e9c41a74d78fb7ee156830ac1e125e6a8fcb90',
+          'footer-spacing-polish-v1.css':'d670a39f540f3e26f8e975ae0d2110628c58c084',
+          'hero-visual-v2.css':'fc506025e22e21fab375eef1c4e8647a66217f81',
+          'info-sections-polish-v1.css':'4a3b09ef76c55eb72fe8c3fa8f415358579ea6d7',
+          'premium-gold-polish-v1.css':'be39c89c440f6ccf9670135b43d492b1261c18e6',
+          'product-detail-polish-v1.css':'d39c5bf5a33165a7cc1243149d8057b223a0605a',
+          'product-polish-v1.css':'ddf0e530e6dd3e98959d143ff2e2c2097538bc54',
+          'search-polish-v1.css':'c9067ee0053a011b641ce54809cb1e67f110fc77',
+          'sell-modal-polish-v1.css':'8bd98db5ae1d22eaaef900a6a81f39ac5fa638c0',
+          'support-query-polish-v1.css':'263df5cf755b5e196e5bf21bd3d32db508bd5f3d',
+          'vercel.json':'914add56b076534e3bc38274461a2b5d7e6c5a77'
+          }
+          for name,want in targets.items():
+              b=Path(name).read_bytes()
+              got=hashlib.sha1(f'blob {len(b)}\0'.encode()+b).hexdigest()
+              if got!=want: raise SystemExit(f'VERIFY_FAIL {name} {got} {want}')
+              print('VERIFIED',name,got)
+          PY
+          git config user.name "ChatGPT exact deploy"
+          git config user.email "actions@users.noreply.github.com"
+          git add index.html admin.html *.css vercel.json
+          git commit -m "Apply premium gold polish exact files"
+          git push origin HEAD:main
