@@ -48,13 +48,13 @@
 
 /* -- 遊戲專區橫幅：限制高度,避免因為寬版比例被拉得過大 -- */
 .game-market-banner{
-  max-height:220px!important;width:100%!important;
-  object-fit:cover!important;object-position:center!important;
+  max-height:300px!important;width:100%!important;
+  object-fit:cover!important;object-position:center 62%!important;
   border-radius:16px!important
 }
 .game-category-card:hover .game-market-banner{transform:scale(1.015)}
 .game-market-banner{transition:transform .3s ease}
-@media(max-width:700px){.game-market-banner{max-height:150px!important}}
+@media(max-width:700px){.game-market-banner{max-height:190px!important;object-position:center 58%!important}}
 
 /* ============================================================
    金色加量 + 熱門分類／更多分類 改為「圖示＋文字」卡片

@@ -256,7 +256,7 @@ html{scroll-behavior:smooth}body{background:var(--v3-paper);font-family:-apple-s
       <h3>更多商品分類</h3>
     </div>
     <div class="more-cat-scroll-wrap">
-    <button type="button" class="more-cat-arrow more-cat-arrow-left" aria-label="向左捲動" onclick="document.getElementById('moreCategoryGrid').scrollBy({left:-320,behavior:'smooth'})">‹</button>
+    <button type="button" class="more-cat-arrow more-cat-arrow-left" aria-label="向左捲動">‹</button>
     <div class="more-category-grid" id="moreCategoryGrid">
       <button class="more-category-btn" type="button" data-category="寵物用品"><b>寵物用品</b><span>飼料・玩具・外出・清潔</span></button>
       <button class="more-category-btn" type="button" data-category="嬰幼兒用品"><b>嬰幼兒用品</b><span>童裝・玩具・推車・育兒用品</span></button>
@@ -269,7 +269,7 @@ html{scroll-behavior:smooth}body{background:var(--v3-paper);font-family:-apple-s
       <button class="more-category-btn" type="button" data-category="旅行／外派用品"><b>旅行／外派用品</b><span>行李・旅行用品・外派生活</span></button>
       <button class="more-category-btn" type="button" data-category="居家照護／保健器材"><b>居家照護／保健器材</b><span>照護・輔具・保健・居家設備</span></button>
     </div>
-    <button type="button" class="more-cat-arrow more-cat-arrow-right" aria-label="向右捲動" onclick="document.getElementById('moreCategoryGrid').scrollBy({left:320,behavior:'smooth'})">›</button>
+    <button type="button" class="more-cat-arrow more-cat-arrow-right" aria-label="向右捲動">›</button>
     </div>
   </div>
 </section>
@@ -821,6 +821,22 @@ document.addEventListener('DOMContentLoaded',()=>{
     else start();
   });
   start();
+})();
+</script>
+<script>
+(function(){
+  document.querySelectorAll('.more-cat-scroll-wrap').forEach(function(wrap){
+    var grid = wrap.querySelector('.more-category-grid');
+    var left = wrap.querySelector('.more-cat-arrow-left');
+    var right = wrap.querySelector('.more-cat-arrow-right');
+    if(!grid) return;
+    if(left) left.addEventListener('click', function(){
+      grid.scrollTo({left: grid.scrollLeft - 320, behavior:'smooth'});
+    });
+    if(right) right.addEventListener('click', function(){
+      grid.scrollTo({left: grid.scrollLeft + 320, behavior:'smooth'});
+    });
+  });
 })();
 </script>
 </body>
