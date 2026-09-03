@@ -1,0 +1,31 @@
+name: Apply Product Polish V1
+on:
+  push:
+    paths:
+      - 'product-polish-v1.css'
+      - '.github/workflows/apply-product-polish-v1.yml'
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Wire isolated product polish stylesheet
+        shell: python
+        run: |
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          marker='<link rel="stylesheet" href="./product-polish-v1.css">'
+          if marker not in s:
+              s=s.replace('</head>', marker+'\n</head>', 1)
+              p.write_text(s)
+      - name: Commit index update
+        run: |
+          if git diff --quiet; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Wire isolated product polish stylesheet"
+          git push
