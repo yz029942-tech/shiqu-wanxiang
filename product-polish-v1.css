@@ -1,0 +1,15 @@
+.products-new .product-grid{gap:18px}
+.products-new .product-card{position:relative;background:#fff;border:1px solid #e5e0d7;border-radius:16px;overflow:hidden;box-shadow:0 8px 24px rgba(31,46,39,.045);transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}
+.products-new .product-card:hover{transform:translateY(-5px);border-color:#d7d0c5;box-shadow:0 18px 42px rgba(31,46,39,.10)}
+.products-new .product-img{height:280px;background:#f2eee7;overflow:hidden}
+.products-new .product-img img{width:100%;height:100%;object-fit:cover;transition:transform .35s ease,filter .35s ease}
+.products-new .product-card:hover .product-img img{transform:scale(1.025);filter:saturate(1.02) contrast(1.01)}
+.products-new .product-body{padding:16px 16px 17px}
+.products-new .product-body h3{font-size:15px;line-height:1.55;margin:10px 0 7px;font-weight:760;letter-spacing:.01em;color:#242824}
+.products-new .price{font-size:21px;line-height:1.2;letter-spacing:-.015em;color:#234a3d;font-weight:900;margin-top:6px}
+.products-new .badge{background:#f0ece5;color:#666b66;border:1px solid #e8e2d8;font-size:10px;padding:5px 8px;font-weight:700}
+.products-new .muted{font-size:11px;color:#858982;line-height:1.55}
+.products-new .product-meta{margin-top:11px;padding-top:10px;border-top:1px solid #f0ece5}
+@media(max-width:900px){.products-new .product-grid{gap:12px}.products-new .product-img{height:230px}}
+@media(max-width:620px){.products-new .product-grid{gap:9px}.products-new .product-card{border-radius:12px}.products-new .product-img{height:178px}.products-new .product-body{padding:11px 11px 12px}.products-new .product-body h3{font-size:12.5px;margin:8px 0 5px}.products-new .price{font-size:17px}.products-new .badge{font-size:9px;padding:4px 6px}.products-new .muted{font-size:10px}.products-new .product-meta{margin-top:8px;padding-top:8px}}
+@media(prefers-reduced-motion:reduce){.products-new .product-card,.products-new .product-img img{transition:none}.products-new .product-card:hover{transform:none}.products-new .product-card:hover .product-img img{transform:none}}
