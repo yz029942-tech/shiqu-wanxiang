@@ -1,0 +1,33 @@
+/* Query + support modal polish v1 — visual only */
+#queryModal,#inquiryModal{backdrop-filter:blur(5px)}
+#queryModal .panel.wide,#inquiryModal .panel.wide{width:min(760px,100%);padding:26px;border:1px solid #e8e1d7;background:#fffdfa;box-shadow:0 28px 80px rgba(29,45,38,.16)}
+#queryModal .modal-head,#inquiryModal .modal-head{padding-bottom:14px;margin-bottom:20px;border-bottom:1px solid #eee8de}
+#queryModal .modal-head h3,#inquiryModal .modal-head h3{font-family:"Noto Serif TC",serif;font-size:22px;letter-spacing:.025em;color:#26312b}
+#queryModal .x,#inquiryModal .x{background:#f2eee7;color:#536059;transition:transform .18s ease,background .18s ease}
+#queryModal .x:hover,#inquiryModal .x:hover{background:#e9e3d9;transform:rotate(4deg)}
+#queryModal .form-grid,#inquiryModal .form-grid{gap:0 14px}
+#queryModal label,#inquiryModal label{font-size:12.5px;color:#59615b;font-weight:720;gap:8px;margin-bottom:15px}
+#queryModal input,#inquiryModal input,#inquiryModal textarea{border:1px solid #ddd7cd;background:#fff;border-radius:12px;padding:13px 14px;outline:none;transition:border-color .18s ease,box-shadow .18s ease,background .18s ease}
+#queryModal input:focus,#inquiryModal input:focus,#inquiryModal textarea:focus{border-color:#6f9184;box-shadow:0 0 0 4px rgba(70,108,94,.09);background:#fffefa}
+#queryModal #querySubmitBtn,#inquiryModal #submitInquiryBtn{min-height:44px;padding:11px 22px;border-radius:999px;background:#244b3e;box-shadow:0 8px 22px rgba(36,75,62,.15)}
+#queryModal #querySubmitBtn:hover,#inquiryModal #submitInquiryBtn:hover{filter:brightness(.97)}
+#queryModal #queryResult{margin-top:20px}
+#queryModal #queryResult .list-card{border:1px solid #e6dfd5;background:#faf8f4;border-radius:15px;padding:16px;box-shadow:0 7px 22px rgba(36,50,43,.05)}
+#queryModal #queryResult .list-row{gap:16px;align-items:start}
+#queryModal #queryResult .thumb{border-radius:12px;background:#eee9e1;border:1px solid #e6dfd5}
+#queryModal #queryResult .status{font-size:11px;padding:5px 9px}
+#inquiryModal .notice{margin-bottom:19px;padding:14px 16px;border:1px solid #e5dfd5;background:#f5f2ec;color:#666d67;border-radius:13px;line-height:1.7}
+#inquiryModal textarea{min-height:145px;line-height:1.75;resize:vertical}
+#inquiryModal #submitInquiryBtn{margin-top:2px}
+@media(max-width:600px){
+ #queryModal,#inquiryModal{padding:10px}
+ #queryModal .panel.wide,#inquiryModal .panel.wide{padding:17px;border-radius:17px;max-height:94vh}
+ #queryModal .modal-head,#inquiryModal .modal-head{margin-bottom:16px;padding-bottom:12px}
+ #queryModal .modal-head h3,#inquiryModal .modal-head h3{font-size:19px}
+ #queryModal .form-grid,#inquiryModal .form-grid{grid-template-columns:1fr}
+ #queryModal #querySubmitBtn,#inquiryModal #submitInquiryBtn{width:100%}
+ #queryModal #queryResult .list-row{grid-template-columns:1fr}
+ #queryModal #queryResult .thumb{width:100%;height:190px}
+ #inquiryModal textarea{min-height:130px}
+}
+@media(prefers-reduced-motion:reduce){#queryModal .x,#inquiryModal .x,#queryModal input,#inquiryModal input,#inquiryModal textarea{transition:none}}
