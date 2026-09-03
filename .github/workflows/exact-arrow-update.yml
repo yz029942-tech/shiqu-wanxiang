@@ -1,0 +1,86 @@
+name: exact-arrow-update
+on:
+  push:
+    branches: [chatgpt-arrow-exact]
+permissions:
+  contents: write
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply exact uploaded index and premium CSS
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git worktree add /tmp/deploy origin/main
+          cd /tmp/deploy
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib
+
+          index = Path('index.html')
+          s = index.read_text(encoding='utf-8')
+          old_left = '''    <button type="button" class="more-cat-arrow more-cat-arrow-left" aria-label="向左捲動" onclick="document.getElementById('moreCategoryGrid').scrollBy({left:-320,behavior:'smooth'})">‹</button>'''
+          new_left = '''    <button type="button" class="more-cat-arrow more-cat-arrow-left" aria-label="向左捲動">‹</button>'''
+          old_right = '''    <button type="button" class="more-cat-arrow more-cat-arrow-right" aria-label="向右捲動" onclick="document.getElementById('moreCategoryGrid').scrollBy({left:320,behavior:'smooth'})">›</button>'''
+          new_right = '''    <button type="button" class="more-cat-arrow more-cat-arrow-right" aria-label="向右捲動">›</button>'''
+          script = '''<script>
+          (function(){
+            document.querySelectorAll('.more-cat-scroll-wrap').forEach(function(wrap){
+              var grid = wrap.querySelector('.more-category-grid');
+              var left = wrap.querySelector('.more-cat-arrow-left');
+              var right = wrap.querySelector('.more-cat-arrow-right');
+              if(!grid) return;
+              if(left) left.addEventListener('click', function(){
+                grid.scrollTo({left: grid.scrollLeft - 320, behavior:'smooth'});
+              });
+              if(right) right.addEventListener('click', function(){
+                grid.scrollTo({left: grid.scrollLeft + 320, behavior:'smooth'});
+              });
+            });
+          })();
+          </script>
+          '''
+          if s.count(old_left) != 1 or s.count(old_right) != 1:
+              raise SystemExit('Expected inline arrow handlers not found exactly once')
+          s = s.replace(old_left, new_left).replace(old_right, new_right)
+          if script in s:
+              raise SystemExit('Arrow script already present unexpectedly')
+          if s.count('</body>') != 1:
+              raise SystemExit('Unexpected body close count')
+          s = s.replace('</body>', script + '</body>')
+          index.write_text(s, encoding='utf-8', newline='')
+
+          css = Path('premium-gold-polish-v1.css')
+          c = css.read_text(encoding='utf-8')
+          reps = [
+            ('max-height:220px!important;width:100%!important;', 'max-height:300px!important;width:100%!important;'),
+            ('object-fit:cover!important;object-position:center!important;', 'object-fit:cover!important;object-position:center 62%!important;'),
+            ('@media(max-width:700px){.game-market-banner{max-height:150px!important}}', '@media(max-width:700px){.game-market-banner{max-height:190px!important;object-position:center 58%!important}}'),
+          ]
+          for old,new in reps:
+              if c.count(old) != 1:
+                  raise SystemExit('Expected premium CSS source text not found exactly once: '+old)
+              c = c.replace(old,new)
+          css.write_text(c, encoding='utf-8', newline='')
+
+          expected = {
+            'index.html':'51eac56273664e778bafd293512148de2176e98b66867a7536352ec5a3acd4ca',
+            'premium-gold-polish-v1.css':'95f4bea5e75c3d74c5d0ae34f2ab7f44033301db61b0ac3f64169ce0748f758f',
+          }
+          for name,want in expected.items():
+              got = hashlib.sha256(Path(name).read_bytes()).hexdigest()
+              if got != want:
+                  raise SystemExit(f'EXACT_FILE_HASH_MISMATCH {name} {got} != {want}')
+              print('VERIFIED', name, got)
+          PY
+          git config user.name "ChatGPT exact deploy"
+          git config user.email "actions@users.noreply.github.com"
+          git add index.html premium-gold-polish-v1.css
+          git diff --cached --quiet && exit 0
+          git commit -m "Update category arrows and game banner crop"
+          git push origin HEAD:main
