@@ -1,0 +1,277 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700;900&display=swap');
+/* Premium gold accent polish v1 — visual only, additive layer */
+:root{--gold:#b79a62;--gold-deep:#9a7f47;--gold-soft:rgba(183,154,98,.16)}
+
+/* -- eyebrow / kicker labels: thin gold rule under the label -- */
+.hero-label,.kicker,.section-head small,.section-title-row small{
+  position:relative;display:inline-block;padding-bottom:11px;color:#8a7d72
+}
+.hero-label::after,.kicker::after,.section-head small::after,.section-title-row small::after{
+  content:"";position:absolute;left:0;bottom:0;width:30px;height:2px;
+  background:linear-gradient(90deg,var(--gold),transparent)
+}
+
+/* -- prices: warm gold instead of plain ink -- */
+.price{color:var(--gold-deep)!important;font-weight:800;letter-spacing:-.01em}
+
+/* -- logo mark: gold ring -- */
+.brand-mark{border-color:var(--gold)!important;color:var(--gold-deep)!important;position:relative}
+.brand-mark::before{content:"";position:absolute;inset:-4px;border:1px solid var(--gold-soft);border-radius:inherit;pointer-events:none}
+
+/* -- primary buttons: gold hairline + warmer hover -- */
+.btn.primary{box-shadow:inset 0 0 0 1px rgba(183,154,98,.35),0 10px 26px rgba(122,62,72,.18)!important}
+.btn.primary:hover{box-shadow:inset 0 0 0 1px rgba(183,154,98,.55),0 14px 32px rgba(122,62,72,.24)!important}
+
+/* -- condition / category badges: gold hairline border -- */
+.badge{border-color:rgba(183,154,98,.45)!important;color:#7a6d5f!important}
+
+/* -- category photo cards: gold-tinted hover glow -- */
+.category.photo-cat{transition:transform .25s ease,box-shadow .25s ease}
+.category.photo-cat:hover{box-shadow:0 20px 44px rgba(154,127,71,.22)!important}
+
+/* -- process step icons / numbers: gold ring -- */
+.process-icon{box-shadow:inset 0 0 0 1px rgba(183,154,98,.3)}
+.step-num{border-color:rgba(183,154,98,.35)!important;color:var(--gold-deep)!important}
+
+/* -- hero meta divider + hero carousel dots: gold accent -- */
+.hero-market-snapshot{border-top-color:rgba(183,154,98,.28)!important;border-bottom-color:rgba(183,154,98,.28)!important}
+.hero-dot.active{background:var(--gold)!important}
+.hero-carousel-dots{box-shadow:0 0 0 1px rgba(183,154,98,.18) inset,0 8px 22px rgba(25,35,30,.08)}
+
+/* -- footer: slender gold hairline on top edge, gold-accented logo -- */
+.footer-v3{border-top:1px solid rgba(183,154,98,.3)}
+.footer-logo{position:relative;display:inline-block;padding-bottom:10px}
+.footer-logo::after{content:"";position:absolute;left:0;bottom:0;width:34px;height:2px;background:var(--gold)}
+
+/* -- section headings: slightly richer serif treatment -- */
+.section-head h2,.section-title-row h2,.safety-grid h2{font-family:"Noto Serif TC",serif;letter-spacing:-.01em}
+
+/* -- 遊戲專區橫幅：限制高度,避免因為寬版比例被拉得過大 -- */
+.game-market-banner{
+  max-height:220px!important;width:100%!important;
+  object-fit:cover!important;object-position:center!important;
+  border-radius:16px!important
+}
+.game-category-card:hover .game-market-banner{transform:scale(1.015)}
+.game-market-banner{transition:transform .3s ease}
+@media(max-width:700px){.game-market-banner{max-height:150px!important}}
+
+/* ============================================================
+   金色加量 + 熱門分類／更多分類 改為「圖示＋文字」卡片
+   (純CSS新增，未更動任何HTML標記)
+   ============================================================ */
+
+/* -- 金色再多一點：整體強化 -- */
+.new-brand .brand-word b{color:var(--v3-black,#2f2a28)}
+.brand-word small{color:var(--gold-deep)!important;letter-spacing:.16em}
+.hero-photo-wrap::after{background:var(--gold-deep)!important}
+.hero-photo-card::before{background:rgba(183,154,98,.14)!important;color:var(--gold-deep)!important}
+h1,.hero-copy2 h1{position:relative}
+.header-actions .btn.primary,#sellModal #submitProductBtn,#queryModal #querySubmitBtn,#inquiryModal #submitInquiryBtn{
+  background:linear-gradient(155deg,var(--green,#7a3e48) 0%,var(--gold-deep) 260%)!important
+}
+.modal-head h3{border-bottom:2px solid var(--gold-soft);padding-bottom:12px}
+.trust-inline{border-top:2px solid var(--gold-soft)!important}
+.btn.ghost{border-color:rgba(183,154,98,.4)!important}
+.btn.ghost:hover{border-color:var(--gold-deep)!important;color:var(--gold-deep)!important}
+a:not(.btn):not(.new-brand):hover{color:var(--gold-deep)!important}
+input:focus,select:focus,textarea:focus{border-color:var(--gold-deep)!important;box-shadow:0 0 0 3px var(--gold-soft)!important}
+.x:hover{color:var(--gold-deep)!important;border-color:rgba(183,154,98,.5)!important}
+.category-grid2 .category.photo-cat{border-color:rgba(183,154,98,.4)!important}
+.header-actions .btn.primary,#sellModal #submitProductBtn,#queryModal #querySubmitBtn,#inquiryModal #submitInquiryBtn{
+  background:linear-gradient(155deg,var(--green,#7a3e48) 0%,var(--gold-deep) 165%)!important
+}
+.gallery-nav{border-color:rgba(183,154,98,.4)!important;color:var(--gold-deep)!important}
+.gallery-counter{background:rgba(122,62,72,.82)!important}
+
+/* ============================================================
+   整體精緻化第二輪：卡片質感／區塊節奏／頁尾對比／搜尋框／標題層次
+   ============================================================ */
+
+/* 1) Hero 圖片：確保圖片本身在最上層、填滿容器，避免看起來空白 */
+.hero-photo-wrap,.hero-carousel{position:relative!important}
+.hero-slide{z-index:2}
+.hero-slide>img{position:relative;z-index:2;display:block!important}
+.hero-photo-wrap{background:linear-gradient(145deg,#e9e2d6,#ddd1c2)!important}
+
+/* 2) 商品卡片：更柔和的圓角與陰影，hover 帶一點金色暖調 */
+.product-card{
+  border-radius:18px!important;
+  box-shadow:0 6px 18px rgba(58,40,42,.05)!important;
+  border-color:rgba(183,154,98,.22)!important
+}
+.product-card:hover{
+  box-shadow:0 20px 42px rgba(122,62,72,.13),0 0 0 1px rgba(183,154,98,.18)!important;
+  border-color:rgba(183,154,98,.4)!important
+}
+
+/* 3) 區塊節奏：安心使用提醒／常見問題 用淡酒紅底色做出區隔 */
+.safety-section{
+  background:linear-gradient(135deg,#f6eeee 0%,#f1e4e6 100%)!important;
+  border-top:1px solid rgba(183,154,98,.22)!important;
+  border-bottom:1px solid rgba(183,154,98,.22)!important
+}
+.faq-section{background:#faf5f2}
+.faq-list details{background:#fffdfb!important}
+
+/* 4) 頁尾：拉高文字對比，避免看不清楚 */
+.footer-v3-grid a,.footer-v3-grid button,.footer-v3-grid span{color:rgba(255,255,255,.8)!important}
+.footer-intro p{color:rgba(255,255,255,.72)!important}
+.footer-bottom-v3{color:rgba(255,255,255,.58)!important}
+.footer-v3-grid b{color:var(--gold,#b79a62)!important;letter-spacing:.12em!important}
+
+/* 5) 搜尋框：更有質感的邊框/陰影/focus */
+.header-search{
+  border:1px solid rgba(183,154,98,.3)!important;
+  box-shadow:0 6px 18px rgba(58,40,42,.05)!important;
+  transition:box-shadow .2s ease,border-color .2s ease
+}
+.header-search:focus-within{
+  border-color:var(--gold-deep)!important;
+  box-shadow:0 0 0 4px var(--gold-soft)!important
+}
+.header-search-icon{color:var(--gold-deep)!important}
+.header-search-btn{background:var(--green,#7a3e48)!important}
+
+/* 6) 標題層級：加強粗細與字距對比，更有精緻編排感 */
+h1,.hero-copy2 h1{font-weight:800!important;letter-spacing:-.03em!important}
+.section-head h2,.section-title-row h2,.safety-grid h2,.more-category-head h3{
+  font-weight:800!important;letter-spacing:-.015em!important
+}
+.hero-label,.kicker,.section-head small,.section-title-row small,.more-category-head small{
+  font-weight:800!important;letter-spacing:.22em!important
+}
+
+/* -- 安心使用提醒 / 常見問題：縮減版面高度 -- */
+.safety-section,.faq-section{padding-top:38px!important;padding-bottom:38px!important}
+.safety-grid{gap:26px!important}
+.safety-grid .kicker{padding-bottom:6px!important;margin-bottom:2px}
+.safety-grid h2{margin:8px 0 10px!important;font-size:32px!important}
+.safety-grid .lead-small{margin:0!important}
+.safety-item{padding:14px 15px!important}
+.faq-list{grid-template-columns:1fr 1fr!important;gap:10px 16px!important;max-width:none!important;align-items:start!important}
+.faq-list summary{padding:14px 0!important;font-size:13.5px!important}
+.faq-list p{padding-right:0!important;font-size:12.5px!important;margin-bottom:14px!important}
+@media(max-width:760px){
+  .faq-list{grid-template-columns:1fr!important}
+  .safety-grid h2{font-size:26px!important}
+}
+.trust-item,.safety-item,.rule-card,.process-card{border-top:2px solid var(--gold-soft)!important}
+.status.approved,.badge.approved{box-shadow:inset 0 0 0 1px rgba(183,154,98,.4)}
+
+/* -- 分類圖示的共用圓形樣式 -- */
+.category-grid2 .category.photo-cat::before,
+.more-category-btn::before{
+  font-family:"Noto Serif TC",serif;font-weight:700;color:var(--gold-deep);
+  background:var(--gold-soft);border:1px solid rgba(183,154,98,.45);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0
+}
+
+/* -- 熱門分類 4 張卡片：拿掉照片，改成大圖示卡片 -- */
+.category-grid2 .category.photo-cat{
+  background:var(--card,#fffdf9)!important;border:1px solid rgba(183,154,98,.28)!important;
+  display:flex!important;flex-direction:column;align-items:flex-start;justify-content:center;
+  gap:16px;padding:28px 24px!important;text-align:left;min-height:210px!important
+}
+.category-grid2 .category.photo-cat img,
+.category-grid2 .category.photo-cat.tone-cat,
+.category-grid2 .category.photo-cat.camp-cat{display:none!important}
+.category-grid2 .category.photo-cat:after{content:none!important}
+.category-grid2 .category.photo-cat>span:last-child{
+  position:static!important;color:var(--v3-black,#2f2a28)!important;left:auto;right:auto;bottom:auto
+}
+.category-grid2 .category.photo-cat>span:last-child small{color:#8a7d72!important}
+.category-grid2 .category.photo-cat::before{
+  content:"";width:60px;height:60px;font-size:24px
+}
+.category-grid2 .category.photo-cat:hover{
+  border-color:rgba(183,154,98,.6)!important;transform:translateY(-4px);
+  box-shadow:0 18px 40px rgba(154,127,71,.16)!important
+}
+.fashion-cat::before{content:"衣"}
+.tech-cat::before{content:"3C";font-size:16px!important}
+.fishing-photo-cat::before{content:"釣"}
+.camp-photo-cat::before{content:"營"}
+
+/* -- 更多分類：寬螢幕正常排滿，窄螢幕(≤900px)才切換成兩排橫向滑動+箭頭 -- */
+.more-cat-scroll-wrap{position:relative}
+.more-cat-arrow{
+  display:none;position:absolute;top:44%;transform:translateY(-50%);z-index:3;
+  width:38px;height:38px;border-radius:50%;border:1px solid rgba(183,154,98,.4);
+  background:rgba(255,253,249,.92);backdrop-filter:blur(6px);
+  color:var(--gold-deep);font-size:20px;line-height:1;cursor:pointer;
+  align-items:center;justify-content:center;
+  box-shadow:0 8px 20px rgba(47,36,38,.12);
+  transition:transform .18s ease,background .18s ease,box-shadow .18s ease
+}
+.more-cat-arrow:hover{background:#fff;transform:translateY(-50%) scale(1.06);box-shadow:0 10px 24px rgba(47,36,38,.16)}
+.more-cat-arrow-left{left:-6px}
+.more-cat-arrow-right{right:-6px}
+
+.more-category-grid{
+  display:grid!important;
+  grid-template-columns:repeat(5,1fr)!important;
+  grid-auto-flow:row!important;
+  gap:22px 18px!important;
+  overflow:visible!important
+}
+.more-category-btn b,.more-category-btn span{
+  white-space:normal!important;word-break:normal!important;overflow-wrap:normal!important;
+  width:100%
+}
+
+@media(max-width:900px){
+  .more-category-grid{
+    grid-template-columns:none!important;
+    grid-auto-flow:column!important;
+    grid-template-rows:repeat(2,auto)!important;
+    grid-auto-columns:150px!important;
+    overflow-x:auto;overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;
+    scroll-snap-type:x proximity;
+    padding:4px 4px 14px;
+    -ms-overflow-style:none;scrollbar-width:none;
+    mask-image:linear-gradient(90deg,#000 92%,transparent 100%)!important;
+    -webkit-mask-image:linear-gradient(90deg,#000 92%,transparent 100%)!important
+  }
+  .more-category-grid::-webkit-scrollbar{display:none}
+  .more-category-btn{scroll-snap-align:start;width:150px!important;min-width:150px!important}
+  .more-cat-arrow{display:flex}
+}
+@media(max-width:700px){
+  .more-category-grid{grid-auto-columns:140px!important}
+  .more-category-btn{width:140px!important;min-width:140px!important}
+  .more-cat-arrow{width:32px;height:32px;font-size:17px}
+  .more-cat-arrow-left{left:-4px}
+  .more-cat-arrow-right{right:-4px}
+}
+.more-category-btn{
+  display:flex!important;flex-direction:column;align-items:center;text-align:center;
+  gap:10px;background:transparent!important;border:0!important;box-shadow:none!important;
+  padding:14px 8px!important
+}
+.more-category-btn::before{
+  content:"";width:60px;height:60px;font-size:22px;margin:0 auto
+}
+.more-category-btn b{font-size:13px;font-weight:750}
+.more-category-btn span{font-size:10.5px;color:#8a7d72}
+.more-category-btn:hover{transform:translateY(-2px)}
+.more-category-btn:hover::before{border-color:rgba(183,154,98,.7);background:rgba(183,154,98,.24)}
+.more-category-btn[data-category="寵物用品"]::before{content:"寵"}
+.more-category-btn[data-category="嬰幼兒用品"]::before{content:"嬰"}
+.more-category-btn[data-category="書籍／收藏／娛樂"]::before{content:"書"}
+.more-category-btn[data-category="居家家具／生活美學"]::before{content:"居"}
+.more-category-btn[data-category="廚房／餐具"]::before{content:"廚"}
+.more-category-btn[data-category="汽機車用品／配件"]::before{content:"車"}
+.more-category-btn[data-category="教材／商業用品"]::before{content:"文"}
+.more-category-btn[data-category="婚禮／派對用品"]::before{content:"禮"}
+.more-category-btn[data-category="旅行／外派用品"]::before{content:"旅"}
+.more-category-btn[data-category="居家照護／保健器材"]::before{content:"安"}
+
+@media(max-width:620px){
+  .category-grid2 .category.photo-cat{padding:20px 18px!important;min-height:0!important}
+  .category-grid2 .category.photo-cat::before{width:48px;height:48px;font-size:19px}
+}
+
+@media(prefers-reduced-motion:reduce){.category.photo-cat,.game-market-banner{transition:none}}

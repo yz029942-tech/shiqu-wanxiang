@@ -175,6 +175,7 @@ html{scroll-behavior:smooth}body{background:var(--v3-paper);font-family:-apple-s
 <link rel="stylesheet" href="./product-polish-v1.css">
 <link rel="stylesheet" href="./search-polish-v1.css">
 <link rel="stylesheet" href="./product-detail-polish-v1.css">
+<link rel="stylesheet" href="./premium-gold-polish-v1.css">
 </head>
 <body>
 <div class="top-marquee"><div class="marquee-inner"><span>全站商品人工審核</span><i>·</i><span>免註冊即可刊登</span><i>·</i><span>買家透過平台安心詢問</span><i>·</i><span>二手好物，找到剛剛好的下一站</span><i>·</i><span>全站商品人工審核</span><i>·</i><span>免註冊即可刊登</span></div></div>
@@ -254,7 +255,9 @@ html{scroll-behavior:smooth}body{background:var(--v3-paper);font-family:-apple-s
       <small>MORE CATEGORIES</small>
       <h3>更多商品分類</h3>
     </div>
-    <div class="more-category-grid">
+    <div class="more-cat-scroll-wrap">
+    <button type="button" class="more-cat-arrow more-cat-arrow-left" aria-label="向左捲動" onclick="document.getElementById('moreCategoryGrid').scrollBy({left:-320,behavior:'smooth'})">‹</button>
+    <div class="more-category-grid" id="moreCategoryGrid">
       <button class="more-category-btn" type="button" data-category="寵物用品"><b>寵物用品</b><span>飼料・玩具・外出・清潔</span></button>
       <button class="more-category-btn" type="button" data-category="嬰幼兒用品"><b>嬰幼兒用品</b><span>童裝・玩具・推車・育兒用品</span></button>
       <button class="more-category-btn" type="button" data-category="書籍／收藏／娛樂"><b>書籍／收藏／娛樂</b><span>書籍・公仔・收藏・影音娛樂</span></button>
@@ -265,6 +268,8 @@ html{scroll-behavior:smooth}body{background:var(--v3-paper);font-family:-apple-s
       <button class="more-category-btn" type="button" data-category="婚禮／派對用品"><b>婚禮／派對用品</b><span>婚禮・派對・佈置・活動用品</span></button>
       <button class="more-category-btn" type="button" data-category="旅行／外派用品"><b>旅行／外派用品</b><span>行李・旅行用品・外派生活</span></button>
       <button class="more-category-btn" type="button" data-category="居家照護／保健器材"><b>居家照護／保健器材</b><span>照護・輔具・保健・居家設備</span></button>
+    </div>
+    <button type="button" class="more-cat-arrow more-cat-arrow-right" aria-label="向右捲動" onclick="document.getElementById('moreCategoryGrid').scrollBy({left:320,behavior:'smooth'})">›</button>
     </div>
   </div>
 </section>
