@@ -1,3 +1,4 @@
+@import url('./sell-modal-polish-v1.css');
 /* Product detail polish v1 — visual only */
 #productModal .panel.wide{width:min(980px,100%);padding:26px;border:1px solid #e8e1d7;background:#fffdfa;box-shadow:0 28px 80px rgba(29,45,38,.16)}
 #productModal .modal-head{padding-bottom:15px;margin-bottom:22px;border-bottom:1px solid #eee8de}
