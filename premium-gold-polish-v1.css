@@ -194,58 +194,7 @@ h1,.hero-copy2 h1{font-weight:800!important;letter-spacing:-.03em!important}
 .fishing-photo-cat::before{content:"釣"}
 .camp-photo-cat::before{content:"營"}
 
-/* -- 更多分類：寬螢幕正常排滿，窄螢幕(≤900px)才切換成兩排橫向滑動+箭頭 -- */
-.more-cat-scroll-wrap{position:relative}
-.more-cat-arrow{
-  display:none;position:absolute;top:44%;transform:translateY(-50%);z-index:3;
-  width:38px;height:38px;border-radius:50%;border:1px solid rgba(183,154,98,.4);
-  background:rgba(255,253,249,.92);backdrop-filter:blur(6px);
-  color:var(--gold-deep);font-size:20px;line-height:1;cursor:pointer;
-  align-items:center;justify-content:center;
-  box-shadow:0 8px 20px rgba(47,36,38,.12);
-  transition:transform .18s ease,background .18s ease,box-shadow .18s ease
-}
-.more-cat-arrow:hover{background:#fff;transform:translateY(-50%) scale(1.06);box-shadow:0 10px 24px rgba(47,36,38,.16)}
-.more-cat-arrow-left{left:-6px}
-.more-cat-arrow-right{right:-6px}
-
-.more-category-grid{
-  display:grid!important;
-  grid-template-columns:repeat(5,1fr)!important;
-  grid-auto-flow:row!important;
-  gap:22px 18px!important;
-  overflow:visible!important
-}
-.more-category-btn b,.more-category-btn span{
-  white-space:normal!important;word-break:normal!important;overflow-wrap:normal!important;
-  width:100%
-}
-
-@media(max-width:900px){
-  .more-category-grid{
-    grid-template-columns:none!important;
-    grid-auto-flow:column!important;
-    grid-template-rows:repeat(2,auto)!important;
-    grid-auto-columns:150px!important;
-    overflow-x:auto;overflow-y:hidden;
-    -webkit-overflow-scrolling:touch;
-    scroll-snap-type:x proximity;
-    padding:4px 4px 14px;
-    -ms-overflow-style:none;scrollbar-width:none;
-    mask-image:linear-gradient(90deg,#000 92%,transparent 100%)!important;
-    -webkit-mask-image:linear-gradient(90deg,#000 92%,transparent 100%)!important
-  }
-  .more-category-grid::-webkit-scrollbar{display:none}
-  .more-category-btn{scroll-snap-align:start;width:150px!important;min-width:150px!important}
-  .more-cat-arrow{display:flex}
-}
-@media(max-width:700px){
-  .more-category-grid{grid-auto-columns:140px!important}
-  .more-category-btn{width:140px!important;min-width:140px!important}
-  .more-cat-arrow{width:32px;height:32px;font-size:17px}
-  .more-cat-arrow-left{left:-4px}
-  .more-cat-arrow-right{right:-4px}
-}
+/* 更多分類滑動功能已改為直接內嵌在 index.html 裡，避免外部檔案快取問題，這裡不再重複定義 */
 .more-category-btn{
   display:flex!important;flex-direction:column;align-items:center;text-align:center;
   gap:10px;background:transparent!important;border:0!important;box-shadow:none!important;
