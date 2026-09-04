@@ -1,0 +1,77 @@
+name: fix3-mobile-browser-test
+on:
+  push:
+    branches: [chatgpt-fix3-browser-test]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install Playwright Chromium
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.55.0 >/dev/null 2>&1
+          npx playwright install --with-deps chromium >/dev/null 2>&1
+      - name: Test live mobile category slider
+        run: |
+          node <<'JS'
+          const { chromium } = require('playwright');
+          (async()=>{
+            const browser = await chromium.launch({headless:true});
+            const page = await browser.newPage({viewport:{width:390,height:844}, deviceScaleFactor:1});
+            const url='https://shiqu-wanxiang-5vhi.vercel.app/?qa=fix3-mobile';
+            await page.goto(url,{waitUntil:'domcontentloaded',timeout:60000});
+            await page.waitForTimeout(3500);
+            await page.locator('.more-cat-scroll-wrap').scrollIntoViewIfNeeded();
+            await page.waitForTimeout(500);
+
+            const state = await page.evaluate(()=>{
+              const wrap=document.querySelector('.more-cat-scroll-wrap');
+              const grid=document.querySelector('#moreCategoryGrid');
+              const left=document.querySelector('.more-cat-arrow-left');
+              const right=document.querySelector('.more-cat-arrow-right');
+              if(!wrap||!grid||!left||!right) return {missing:true};
+              const tops=[...grid.querySelectorAll('.more-category-btn')].map(x=>x.offsetTop);
+              const uniqueTops=[...new Set(tops)];
+              return {
+                missing:false,
+                width:innerWidth,
+                link:[...document.querySelectorAll('link[rel="stylesheet"]')].map(x=>x.getAttribute('href')).find(x=>x&&x.includes('premium-gold-polish-v1.css'))||null,
+                arrowLeftDisplay:getComputedStyle(left).display,
+                arrowRightDisplay:getComputedStyle(right).display,
+                overflowX:getComputedStyle(grid).overflowX,
+                gridAutoFlow:getComputedStyle(grid).gridAutoFlow,
+                rows:uniqueTops.length,
+                itemTops:uniqueTops,
+                scrollWidth:grid.scrollWidth,
+                clientWidth:grid.clientWidth,
+                before:grid.scrollLeft
+              };
+            });
+            console.log('MOBILE_STATE', JSON.stringify(state));
+            if(state.missing) throw new Error('slider elements missing');
+            if(state.width!==390) throw new Error('viewport is not 390px');
+            if(state.link!=='./premium-gold-polish-v1.css?v=2') throw new Error('premium css cache-busting link incorrect: '+state.link);
+            if(state.arrowLeftDisplay==='none'||state.arrowRightDisplay==='none') throw new Error('arrows not visible');
+            if(state.rows!==2) throw new Error('more categories are not two rows: '+state.rows);
+            if(!(state.scrollWidth>state.clientWidth)) throw new Error('grid is not horizontally scrollable');
+
+            await page.locator('.more-cat-arrow-right').click();
+            await page.waitForTimeout(900);
+            const afterRight=await page.locator('#moreCategoryGrid').evaluate(el=>el.scrollLeft);
+            console.log('AFTER_RIGHT',afterRight);
+            if(!(afterRight>state.before+5)) throw new Error('right arrow did not scroll');
+
+            await page.locator('.more-cat-arrow-left').click();
+            await page.waitForTimeout(900);
+            const afterLeft=await page.locator('#moreCategoryGrid').evaluate(el=>el.scrollLeft);
+            console.log('AFTER_LEFT',afterLeft);
+            if(!(afterLeft<afterRight-5)) throw new Error('left arrow did not scroll back');
+
+            console.log('BROWSER_TEST_PASS');
+            await browser.close();
+          })().catch(e=>{console.error(e);process.exit(1)});
+          JS
