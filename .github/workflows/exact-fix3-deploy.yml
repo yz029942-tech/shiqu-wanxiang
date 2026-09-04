@@ -1,0 +1,67 @@
+name: exact-fix3-deploy
+on:
+  push:
+    branches: [chatgpt-fix3-exact]
+permissions:
+  contents: write
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply exact uploaded fix3 files
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git worktree add /tmp/deploy origin/main
+          cd /tmp/deploy
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib
+
+          expected_before = {
+            'index.html':'51eac56273664e778bafd293512148de2176e98b66867a7536352ec5a3acd4ca',
+            'premium-gold-polish-v1.css':'95f4bea5e75c3d74c5d0ae34f2ab7f44033301db61b0ac3f64169ce0748f758f',
+          }
+          for name,want in expected_before.items():
+              got = hashlib.sha256(Path(name).read_bytes()).hexdigest()
+              if got != want:
+                  raise SystemExit(f'BASE_HASH_MISMATCH {name} {got} != {want}')
+
+          index = Path('index.html')
+          s = index.read_text(encoding='utf-8')
+          old_link = '<link rel="stylesheet" href="./premium-gold-polish-v1.css">'
+          new_block = '''<link rel="stylesheet" href="./premium-gold-polish-v1.css?v=2">\n<style>\n/* 更多分類滑動功能：直接內嵌在頁面裡，避免外部CSS檔案快取問題 */\n.more-cat-scroll-wrap{position:relative}\n.more-cat-arrow{\n  display:none;position:absolute;top:44%;transform:translateY(-50%);z-index:3;\n  width:38px;height:38px;border-radius:50%;border:1px solid rgba(183,154,98,.4);\n  background:rgba(255,253,249,.92);color:#9a7f47;font-size:20px;line-height:1;cursor:pointer;\n  align-items:center;justify-content:center;\n  box-shadow:0 8px 20px rgba(47,36,38,.12);\n}\n.more-cat-arrow:hover{background:#fff}\n.more-cat-arrow-left{left:-6px}\n.more-cat-arrow-right{right:-6px}\n.more-category-grid{\n  display:grid!important;grid-template-columns:repeat(5,1fr)!important;\n  grid-auto-flow:row!important;gap:22px 18px!important;overflow:visible!important\n}\n.more-category-btn b,.more-category-btn span{\n  white-space:normal!important;word-break:normal!important;overflow-wrap:normal!important;width:100%\n}\n@media(max-width:900px){\n  .more-category-grid{\n    grid-template-columns:none!important;grid-auto-flow:column!important;\n    grid-template-rows:repeat(2,auto)!important;grid-auto-columns:150px!important;\n    overflow-x:auto!important;overflow-y:hidden!important;-webkit-overflow-scrolling:touch;\n    scroll-snap-type:x proximity;padding:4px 4px 14px;\n    -ms-overflow-style:none;scrollbar-width:none;\n    mask-image:linear-gradient(90deg,#000 92%,transparent 100%)!important;\n    -webkit-mask-image:linear-gradient(90deg,#000 92%,transparent 100%)!important\n  }\n  .more-category-grid::-webkit-scrollbar{display:none}\n  .more-category-btn{scroll-snap-align:start;width:150px!important;min-width:150px!important}\n  .more-cat-arrow{display:flex!important}\n}\n@media(max-width:700px){\n  .more-category-grid{grid-auto-columns:140px!important}\n  .more-category-btn{width:140px!important;min-width:140px!important}\n  .more-cat-arrow{width:32px;height:32px;font-size:17px}\n  .more-cat-arrow-left{left:-4px}\n  .more-cat-arrow-right{right:-4px}\n}\n</style>'''
+          if s.count(old_link) != 1:
+              raise SystemExit('premium css link source not found exactly once')
+          s = s.replace(old_link, new_block)
+          index.write_text(s, encoding='utf-8', newline='')
+
+          css = Path('premium-gold-polish-v1.css')
+          c = css.read_text(encoding='utf-8')
+          old_css = '''/* -- 更多分類：寬螢幕正常排滿，窄螢幕(≤900px)才切換成兩排橫向滑動+箭頭 -- */\n.more-cat-scroll-wrap{position:relative}\n.more-cat-arrow{\n  display:none;position:absolute;top:44%;transform:translateY(-50%);z-index:3;\n  width:38px;height:38px;border-radius:50%;border:1px solid rgba(183,154,98,.4);\n  background:rgba(255,253,249,.92);backdrop-filter:blur(6px);\n  color:var(--gold-deep);font-size:20px;line-height:1;cursor:pointer;\n  align-items:center;justify-content:center;\n  box-shadow:0 8px 20px rgba(47,36,38,.12);\n  transition:transform .18s ease,background .18s ease,box-shadow .18s ease\n}\n.more-cat-arrow:hover{background:#fff;transform:translateY(-50%) scale(1.06);box-shadow:0 10px 24px rgba(47,36,38,.16)}\n.more-cat-arrow-left{left:-6px}\n.more-cat-arrow-right{right:-6px}\n\n.more-category-grid{\n  display:grid!important;\n  grid-template-columns:repeat(5,1fr)!important;\n  grid-auto-flow:row!important;\n  gap:22px 18px!important;\n  overflow:visible!important\n}\n.more-category-btn b,.more-category-btn span{\n  white-space:normal!important;word-break:normal!important;overflow-wrap:normal!important;\n  width:100%\n}\n\n@media(max-width:900px){\n  .more-category-grid{\n    grid-template-columns:none!important;\n    grid-auto-flow:column!important;\n    grid-template-rows:repeat(2,auto)!important;\n    grid-auto-columns:150px!important;\n    overflow-x:auto;overflow-y:hidden;\n    -webkit-overflow-scrolling:touch;\n    scroll-snap-type:x proximity;\n    padding:4px 4px 14px;\n    -ms-overflow-style:none;scrollbar-width:none;\n    mask-image:linear-gradient(90deg,#000 92%,transparent 100%)!important;\n    -webkit-mask-image:linear-gradient(90deg,#000 92%,transparent 100%)!important\n  }\n  .more-category-grid::-webkit-scrollbar{display:none}\n  .more-category-btn{scroll-snap-align:start;width:150px!important;min-width:150px!important}\n  .more-cat-arrow{display:flex}\n}\n@media(max-width:700px){\n  .more-category-grid{grid-auto-columns:140px!important}\n  .more-category-btn{width:140px!important;min-width:140px!important}\n  .more-cat-arrow{width:32px;height:32px;font-size:17px}\n  .more-cat-arrow-left{left:-4px}\n  .more-cat-arrow-right{right:-4px}\n}\n'''
+          replacement = '/* 更多分類滑動功能已改為直接內嵌在 index.html 裡，避免外部檔案快取問題，這裡不再重複定義 */\n'
+          if c.count(old_css) != 1:
+              raise SystemExit('external slider CSS block not found exactly once')
+          c = c.replace(old_css, replacement)
+          css.write_text(c, encoding='utf-8', newline='')
+
+          expected_after = {
+            'index.html':'18a2b2a1574ca23819a4748403f2a7d553d05cf5d64bb45a7df238c7608d07bc',
+            'premium-gold-polish-v1.css':'3a71202e4f591e408843900a8bea7ed5f6de55843522b59910810f0c36d05875',
+          }
+          for name,want in expected_after.items():
+              got = hashlib.sha256(Path(name).read_bytes()).hexdigest()
+              if got != want:
+                  raise SystemExit(f'EXACT_FILE_HASH_MISMATCH {name} {got} != {want}')
+              print('VERIFIED', name, got)
+          PY
+          git config user.name "ChatGPT exact deploy"
+          git config user.email "actions@users.noreply.github.com"
+          git add index.html premium-gold-polish-v1.css
+          git diff --cached --quiet && exit 0
+          git commit -m "Inline mobile category slider styles"
+          git push origin HEAD:main
