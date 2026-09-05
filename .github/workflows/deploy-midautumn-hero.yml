@@ -1,0 +1,55 @@
+name: deploy-midautumn-hero
+on:
+  push:
+    branches: [chatgpt-midautumn-final3]
+permissions:
+  contents: write
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Rebuild and validate Mid-Autumn WebP
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/midautumn
+          cat tmp/hero.part* | tr -d '\r\n' | base64 -d > /tmp/midautumn/hero-midautumn-2026.webp
+          python3 -m pip install --quiet pillow
+          python3 - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          p=Path('/tmp/midautumn/hero-midautumn-2026.webp')
+          im=Image.open(p)
+          print('FORMAT', im.format, 'SIZE', im.size, 'BYTES', p.stat().st_size)
+          if im.format != 'WEBP': raise SystemExit('not webp')
+          if im.size != (1500,1000): raise SystemExit(f'unexpected size {im.size}')
+          if p.stat().st_size < 50000: raise SystemExit('image unexpectedly small')
+          PY
+      - name: Apply exact Hero slide to production main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git worktree add /tmp/prod origin/main
+          cp /tmp/midautumn/hero-midautumn-2026.webp /tmp/prod/hero-midautumn-2026.webp
+          cd /tmp/prod
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          old='''      <div class="hero-slide hero-placeholder hero-placeholder-1" data-slide="1" aria-label="預留輪播圖片"></div>'''
+          new='''      <div class="hero-slide" data-slide="1">\n        <img src="./hero-midautumn-2026.webp?v=1" alt="拾趣萬象中秋主視覺">\n      </div>'''
+          if s.count(old) != 1:
+              raise SystemExit(f'expected slide placeholder exactly once, got {s.count(old)}')
+          s=s.replace(old,new)
+          p.write_text(s,encoding='utf-8',newline='')
+          PY
+          git config user.name "ChatGPT exact deploy"
+          git config user.email "actions@users.noreply.github.com"
+          git add index.html hero-midautumn-2026.webp
+          git diff --cached --check
+          git commit -m "Add Mid-Autumn hero carousel image"
+          git push origin HEAD:main
