@@ -1,0 +1,69 @@
+name: deploy-midautumn-safe-final
+on:
+  push:
+    branches: [chatgpt-midautumn-safe-final]
+permissions:
+  contents: write
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Build exact production change
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git worktree add /tmp/prod origin/main
+          cd /tmp/prod
+
+          curl -fsSL \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/yz029942-tech/shiqu-wanxiang/git/blobs/7970e76dddbfff922874cfc31ab8adcb5f5e417b" \
+            -o /tmp/hero-blob.json
+          python3 - <<'PY'
+          import json,base64
+          from pathlib import Path
+          obj=json.loads(Path('/tmp/hero-blob.json').read_text())
+          raw=base64.b64decode(obj['content'].replace('\n',''))
+          Path('hero-midautumn-2026.webp').write_bytes(raw)
+          print('IMAGE_BYTES',len(raw))
+          PY
+
+          python3 -m pip install --quiet pillow
+          python3 - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          p=Path('hero-midautumn-2026.webp')
+          im=Image.open(p)
+          print('FORMAT',im.format,'SIZE',im.size,'BYTES',p.stat().st_size)
+          if im.format!='WEBP': raise SystemExit('not WEBP')
+          if im.size!=(1500,1000): raise SystemExit(f'unexpected image size {im.size}')
+          PY
+
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          old='''      <div class="hero-slide hero-placeholder hero-placeholder-1" data-slide="1" aria-label="預留輪播圖片"></div>'''
+          new='''      <div class="hero-slide" data-slide="1">\n        <img src="./hero-midautumn-2026.webp?v=1" alt="拾趣萬象中秋主視覺">\n      </div>'''
+          if s.count(old)!=1:
+              raise SystemExit(f'expected Hero placeholder exactly once, found {s.count(old)}')
+          s=s.replace(old,new)
+          p.write_text(s,encoding='utf-8',newline='')
+          PY
+
+          git config user.name "ChatGPT exact deploy"
+          git config user.email "actions@users.noreply.github.com"
+          git add index.html hero-midautumn-2026.webp
+          git diff --cached --check
+          changed="$(git diff --cached --name-only)"
+          printf '%s\n' "$changed"
+          test "$changed" = $'hero-midautumn-2026.webp\nindex.html' || test "$changed" = $'index.html\nhero-midautumn-2026.webp'
+          git commit -m "Add Mid-Autumn hero carousel image"
+          git push origin HEAD:main
